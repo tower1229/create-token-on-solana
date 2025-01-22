@@ -28,7 +28,6 @@ function HomeComponent() {
   const [logs, setLogs] = useState<string[]>([]);
   const [successInfo, setSuccessInfo] = useState<{
     address: string;
-    explorerUrl: string;
   } | undefined>(undefined);
 
   const addLog = (message: string) => {

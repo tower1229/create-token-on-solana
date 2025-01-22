@@ -26,4 +26,8 @@ export default defineConfig({
     title: "Create Token On Solana",
     favicon: "./public/images/favicon.ico",
   },
+  output: {
+    assetPrefix:
+      process.env.NODE_ENV === "production" ? "/create-token-on-solana/" : "/",
+  },
 });
