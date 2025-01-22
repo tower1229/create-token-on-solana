@@ -11,9 +11,16 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as CreateSplImport } from './routes/create-spl'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const CreateSplRoute = CreateSplImport.update({
+  id: '/create-spl',
+  path: '/create-spl',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -32,6 +39,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/create-spl': {
+      id: '/create-spl'
+      path: '/create-spl'
+      fullPath: '/create-spl'
+      preLoaderRoute: typeof CreateSplImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +53,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/create-spl': typeof CreateSplRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/create-spl': typeof CreateSplRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/create-spl': typeof CreateSplRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/create-spl'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/create-spl'
+  id: '__root__' | '/' | '/create-spl'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreateSplRoute: typeof CreateSplRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreateSplRoute: CreateSplRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +96,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/create-spl"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/create-spl": {
+      "filePath": "create-spl.tsx"
     }
   }
 }
