@@ -119,9 +119,9 @@ export const Header = () => {
     <div className="bg-gradient-to-r from-purple-900/90 to-black/90 backdrop-blur-lg flex h-20 shadow-lg px-6 top-0 right-0 left-0 z-50 gap-2 items-center fixed border-b border-purple-800/30">
       <Link
         to="/"
-        className="flex font-bold text-2xl gap-2 items-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition-all"
+        className=" text-5xl"
       >
-        Create Token On Solana
+        🧙🏼‍♂️
       </Link>
       <div className="flex-1"></div>
 
