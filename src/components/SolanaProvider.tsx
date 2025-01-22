@@ -17,7 +17,7 @@ export const SolanaProvider = ({ children }: { children: ReactNode }) => {
       (import.meta.env.PUBLIC_SUPPORT_NETWORKS as string).indexOf(
         "solana-devnet"
       ) !== -1
-        ? "solana_devnet"
+        ? "solana-devnet"
         : "solana"
     ];
 

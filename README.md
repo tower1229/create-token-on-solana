@@ -1,4 +1,4 @@
-# Rsbuild Project Airdrop App
+# Create A Token On Solana
 
 ## Setup
 

@@ -25,17 +25,6 @@ declare module "@tanstack/react-router" {
   }
 }
 
-// 注册所有获取函数
-import { getStore } from "@/store";
-import { fetchFunctions } from "@/store/modules/fetchFunctions";
-
-getStore().DataStore.registerAll(fetchFunctions);
-getStore().DataStore.preloadAll([
-  "rules",
-  "personFilterTypes",
-  "distributionMethods",
-]);
-
 const App = () => {
   return (
     <SolanaProvider>

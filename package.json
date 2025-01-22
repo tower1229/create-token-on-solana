@@ -1,9 +1,9 @@
 {
-  "name": "solana-mint",
+  "name": "solana-create-token",
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "rsbuild dev --open --port 3001",
+    "dev": "rsbuild dev --open --port 3002",
     "build:test": "rsbuild build --env-mode test",
     "build": "rsbuild build",
     "preview": "rsbuild preview"
