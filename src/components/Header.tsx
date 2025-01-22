@@ -57,7 +57,7 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
       {connected ? (
         <div className="join">
           <div className="dropdown dropdown-end join-item">
-            <button className="my-2 btn  btn-neutral join-item ">
+            <button className="my-2 btn  btn-primary join-item ">
               {Network.currentNetwork === "solana" ? "Mainnet" : "Devnet"}
             </button>
             <ul
@@ -116,9 +116,12 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
 
 export const Header = () => {
   return (
-    <div className="bg-white flex h-20  shadow-lg px-6 top-0 right-0 left-0 z-50 gap-2 items-center fixed">
-      <Link to="/" className="flex font-bold text-2xl gap-2 items-center">
-        Create Token On Solana
+    <div className="bg-gradient-to-r from-purple-900/90 to-black/90 backdrop-blur-lg flex h-20 shadow-lg px-6 top-0 right-0 left-0 z-50 gap-2 items-center fixed border-b border-purple-800/30">
+      <Link
+        to="/"
+        className=" text-5xl"
+      >
+        🧙🏼‍♂️
       </Link>
       <div className="flex-1"></div>
 
