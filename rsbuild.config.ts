@@ -23,7 +23,7 @@ export default defineConfig({
     },
   },
   html: {
-    title: "Vly Airdrop",
+    title: "Create Token On Solana",
     favicon: "./public/images/favicon.ico",
   },
 });

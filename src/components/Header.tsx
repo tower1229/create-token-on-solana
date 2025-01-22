@@ -8,7 +8,7 @@ import { Plugs, Wallet } from "@phosphor-icons/react";
 import { getStore, autorun } from "@/store";
 
 const ConnectSolanaButton = function ConnectSolanaButton() {
-  const { Channel } = getStore();
+  const { Channel, Network } = getStore();
   const { connected, publicKey, select, connect, disconnect } = useWallet();
   const [isSelect, toggleSelect] = useState(false);
 
@@ -18,7 +18,7 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
   );
 
   useEffect(() => {
-    if (isSelect) {
+    if (isSelect && connect) {
       connect()
         .then(() => {
           console.log("connect success");
@@ -26,13 +26,9 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
         .catch((error) => toast.error(error));
     }
 
-    return () => {
-      toggleSelect(false);
-    };
   }, [isSelect, connect]);
 
   const handleConnect = () => {
-    console.log("handleConnect", connected);
     if (!connected) {
       select(new PhantomWalletAdapter().name);
       toggleSelect(true);
@@ -41,6 +37,10 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
 
   const handleLogout = () => {
     disconnect();
+  };
+
+  const handleSwitchNetwork = (network: 'solana' | 'solana-devnet') => {
+    Network.setNetwork(network);
   };
 
   useEffect(() => {
@@ -55,23 +55,53 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
   return (
     <>
       {connected ? (
-        <div className="dropdown dropdown-hover dropdown-end">
-          <button className="my-2 btn-primary btn btn-outline">
-            <Wallet size={24} />
-            {shortString(walletAddress || "--", 6, 6)}
-          </button>
-          <ul
-            tabIndex={0}
-            className="rounded-lg bg-base-100 shadow p-2 w-48 z-[1] dropdown-content menu"
-          >
-            <li>
-              <a onClick={() => handleLogout()}>
-                <Plugs size={24} weight="fill" className="text-primary" />{" "}
-                Disconnect
-              </a>
-            </li>
-          </ul>
-        </div>
+        <div className="join">
+          <div className="dropdown dropdown-end join-item">
+            <button className="my-2 btn  btn-neutral join-item ">
+              {Network.currentNetwork === "solana" ? "Mainnet" : "Devnet"}
+            </button>
+            <ul
+              tabIndex={0}
+              className="rounded-lg bg-base-100 shadow p-2 w-28 z-[1] dropdown-content menu"
+            >
+              <li>
+                <a
+                  onClick={() => handleSwitchNetwork('solana')}
+                  className={Network.currentNetwork === 'solana' ? 'active' : ''}
+                >
+                  Mainnet
+                </a>
+              </li>
+              <li>
+                <a
+                  onClick={() => handleSwitchNetwork('solana-devnet')}
+                  className={Network.currentNetwork === 'solana-devnet' ? 'active' : ''}
+                >
+                  Devnet
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div className="dropdown dropdown-hover dropdown-end">
+            <button className="my-2 btn-primary btn btn-outline join-item">
+              <Wallet size={24} />
+              {shortString(walletAddress || "--", 6, 6)}
+            </button>
+
+            <ul
+              tabIndex={0}
+              className="rounded-lg bg-base-100 shadow p-2 w-44 z-[1] dropdown-content menu"
+            >
+
+              <li>
+                <a onClick={() => handleLogout()}>
+                  <Plugs size={24} weight="fill" className="text-primary" />{" "}
+                  Disconnect
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div >
       ) : (
         <button
           className="btn btn-outline btn-primary"

@@ -1,25 +1,36 @@
-import { useMemo, ReactNode } from "react";
+import { useMemo, ReactNode, useState, useEffect } from "react";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import { getStore, autorun } from "@/store";
 
 // Default styles that can be overridden by your app
 import "@solana/wallet-adapter-react-ui/styles.css";
 
 import { RPCS } from "@/constants";
 
+const ConnectionProviderWithNetwork = ({ children }: { children: ReactNode }) => {
+  const { Network } = getStore();
+  const [endpoint, setEndpoint] = useState(RPCS[Network.currentNetwork]);
+
+  useEffect(() => {
+    const disposer = autorun(() => {
+      setEndpoint(RPCS[Network.currentNetwork]);
+    });
+
+    return () => disposer();
+  }, [Network]);
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      {children}
+    </ConnectionProvider>
+  );
+};
+
 export const SolanaProvider = ({ children }: { children: ReactNode }) => {
-  // You can also provide a custom RPC endpoint.
-  const endpoint =
-    RPCS[
-      (import.meta.env.PUBLIC_SUPPORT_NETWORKS as string).indexOf(
-        "solana-devnet"
-      ) !== -1
-        ? "solana-devnet"
-        : "solana"
-    ];
 
   const wallets = useMemo(
     () => [
@@ -42,10 +53,10 @@ export const SolanaProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
+    <ConnectionProviderWithNetwork>
       <WalletProvider wallets={wallets} autoConnect>
         {children}
       </WalletProvider>
-    </ConnectionProvider>
+    </ConnectionProviderWithNetwork>
   );
 };

@@ -26,6 +26,10 @@ function HomeComponent() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
+  const [successInfo, setSuccessInfo] = useState<{
+    address: string;
+    explorerUrl: string;
+  } | undefined>(undefined);
 
   const addLog = (message: string) => {
     setLogs((prev) => [...prev, message]);
@@ -35,6 +39,7 @@ function HomeComponent() {
     try {
       setIsLoading(true);
       setLogs([]);
+      setSuccessInfo(undefined);
 
       if (!connected || !publicKey || !signTransaction) {
         toast("请先连接钱包!");
@@ -174,6 +179,10 @@ function HomeComponent() {
       await connection.confirmTransaction(signature, "confirmed");
 
       addLog("🎉 代币创建完成!");
+      setSuccessInfo({
+        address: mintAccount.publicKey.toString(),
+      });
+
     } catch (error: any) {
       if (error instanceof web3.SendTransactionError) {
         console.error("交易错误详情:", error.logs);
@@ -191,74 +200,79 @@ function HomeComponent() {
     }
   };
 
+
   return (
     <div className="mx-auto max-w-screen-md p-4 pt-24">
       <Header />
 
-      <div className="space-y-4 mt-4">
-        <div>
-          <label className="mb-1 block">代币名称</label>
-          <input
-            type="text"
-            value={tokenInfo.name}
-            onChange={(e) =>
-              setTokenInfo({ ...tokenInfo, name: e.target.value })
-            }
-            className="border rounded w-full p-2"
-          />
-        </div>
+      <div className="card bg-base-100 shadow-xl p-6 mt-4">
+        <h2 className="card-title text-2xl mb-6">创建代币</h2>
 
-        <div>
-          <label className="mb-1 block">代币符号</label>
-          <input
-            type="text"
-            value={tokenInfo.symbol}
-            onChange={(e) =>
-              setTokenInfo({ ...tokenInfo, symbol: e.target.value })
-            }
-            className="border rounded w-full p-2"
-          />
-        </div>
+        <div className="space-y-6">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">代币名称</span>
+            </label>
+            <input
+              type="text"
+              value={tokenInfo.name}
+              onChange={(e) => setTokenInfo({ ...tokenInfo, name: e.target.value })}
+              className="input input-bordered w-full"
+            />
+          </div>
 
-        <div>
-          <label className="mb-1 block">精度</label>
-          <input
-            type="number"
-            value={tokenInfo.decimals}
-            onChange={(e) =>
-              setTokenInfo({ ...tokenInfo, decimals: Number(e.target.value) })
-            }
-            className="border rounded w-full p-2"
-          />
-        </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">代币符号</span>
+            </label>
+            <input
+              type="text"
+              value={tokenInfo.symbol}
+              onChange={(e) => setTokenInfo({ ...tokenInfo, symbol: e.target.value })}
+              className="input input-bordered w-full"
+            />
+          </div>
 
-        <div>
-          <label className="mb-1 block">发行总量</label>
-          <input
-            type="text"
-            value={tokenInfo.totalSupply}
-            onChange={(e) =>
-              setTokenInfo({ ...tokenInfo, totalSupply: e.target.value })
-            }
-            className="border rounded w-full p-2"
-          />
-        </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">精度</span>
+            </label>
+            <input
+              type="number"
+              value={tokenInfo.decimals}
+              onChange={(e) => setTokenInfo({ ...tokenInfo, decimals: Number(e.target.value) })}
+              className="input input-bordered w-full"
+            />
+          </div>
 
-        <div>
-          <label className="mb-1 block">代币描述</label>
-          <textarea
-            value={tokenInfo.description}
-            onChange={(e) =>
-              setTokenInfo({ ...tokenInfo, description: e.target.value })
-            }
-            className="border rounded w-full p-2"
-            rows={3}
-          />
-        </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">发行总量</span>
+            </label>
+            <input
+              type="text"
+              value={tokenInfo.totalSupply}
+              onChange={(e) => setTokenInfo({ ...tokenInfo, totalSupply: e.target.value })}
+              className="input input-bordered w-full"
+            />
+          </div>
 
-        <div>
-          <label className="mb-1 block">代币图片</label>
-          <div className="flex flex-col gap-2">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">代币描述</span>
+            </label>
+            <textarea
+              value={tokenInfo.description}
+              onChange={(e) => setTokenInfo({ ...tokenInfo, description: e.target.value })}
+              className="textarea textarea-bordered w-full"
+              rows={3}
+            />
+          </div>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">代币图片</span>
+            </label>
             <input
               type="file"
               accept="image/*"
@@ -271,47 +285,55 @@ function HomeComponent() {
                   }));
                 }
               }}
-              className="border rounded w-full p-2"
+              className="file-input file-input-bordered w-full"
             />
             {tokenInfo.imageFile && (
-              <div className="mt-2">
+              <div className="mt-4">
                 <img
                   src={URL.createObjectURL(tokenInfo.imageFile)}
                   alt="Token preview"
-                  className="rounded object-cover h-32 w-32"
+                  className="rounded-lg object-cover h-32 w-32 border border-base-300"
                 />
               </div>
             )}
           </div>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">外部链接</span>
+            </label>
+            <input
+              type="text"
+              value={tokenInfo.externalUrl}
+              onChange={(e) => setTokenInfo({ ...tokenInfo, externalUrl: e.target.value })}
+              className="input input-bordered w-full"
+              placeholder="https://..."
+            />
+          </div>
+
+          <button
+            onClick={createToken}
+            disabled={!connected || isLoading}
+            className="btn btn-primary w-full"
+          >
+            {isLoading && (
+              <span className="loading loading-spinner"></span>
+            )}
+            {isLoading ? "创建中..." : "创建代币"}
+          </button>
         </div>
-
-        <div>
-          <label className="mb-1 block">外部链接</label>
-          <input
-            type="text"
-            value={tokenInfo.externalUrl}
-            onChange={(e) =>
-              setTokenInfo({ ...tokenInfo, externalUrl: e.target.value })
-            }
-            className="border rounded w-full p-2"
-            placeholder="https://..."
-          />
-        </div>
-
-        <button
-          onClick={createToken}
-          disabled={!connected || isLoading}
-          className="rounded flex bg-green-500 text-white py-2 px-4 gap-2 items-center disabled:opacity-50"
-        >
-          {isLoading && (
-            <div className="border-white border-t-transparent rounded-full border-2 h-4 animate-spin w-4" />
-          )}
-          {isLoading ? "创建中..." : "创建代币"}
-        </button>
-
-        {/* 进度日志展示 */}
-        <ProgressModal open={logs.length > 0} logs={logs} />
       </div>
+
+      {/* 进度日志展示 */}
+      <ProgressModal
+        open={logs.length > 0}
+        logs={logs}
+        successInfo={successInfo}
+        onClose={() => {
+          setLogs([]);
+          setSuccessInfo(undefined);
+        }}
+      />
     </div>
   );
 }
