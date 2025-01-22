@@ -72,8 +72,17 @@ function HomeComponent() {
         token.MINT_SIZE
       );
 
-      // 2. 创建初始化代币铸造账户的交易
-      const mintTransaction = new web3.Transaction().add(
+      // 获取关联代币账户地址
+      const associatedTokenAddress = token.getAssociatedTokenAddressSync(
+        mintAccount.publicKey,
+        publicKey
+      );
+
+      // 合并所有指令到一个交易中
+      const transaction = new web3.Transaction();
+
+      // 1. 添加创建代币铸造账户的指令
+      transaction.add(
         web3.SystemProgram.createAccount({
           fromPubkey: publicKey,
           newAccountPubkey: mintAccount.publicKey,
@@ -90,82 +99,28 @@ function HomeComponent() {
         )
       );
 
-      // 3. 设置交易的 feePayer 和 recentBlockhash
-      mintTransaction.feePayer = publicKey;
-      mintTransaction.recentBlockhash = (
-        await connection.getLatestBlockhash()
-      ).blockhash;
-
-      // 4. 先由 mintAccount 签名
-      mintTransaction.sign(mintAccount);
-
-      // 5. 然后由用户钱包签名
-      const signedTx = await signTransaction(mintTransaction);
-
-      // 6. 发送并确认交易
-      const mintTxSignature = await connection.sendRawTransaction(
-        signedTx.serialize()
-      );
-      await connection.confirmTransaction(mintTxSignature);
-
-      addLog(`代币铸造账户创建成功: ${mintAccount.publicKey.toString()}`);
-
-      addLog("正在创建代币账户...");
-      const associatedTokenAddress = token.getAssociatedTokenAddressSync(
-        mintAccount.publicKey,
-        publicKey
-      );
-
-      const createAccountInstruction =
+      // 2. 添加创建关联代币账户的指令
+      transaction.add(
         token.createAssociatedTokenAccountInstruction(
-          publicKey, // payer
-          associatedTokenAddress, // associated token account
-          publicKey, // owner
-          mintAccount.publicKey // mint
-        );
-
-      const createAccountTransaction = new web3.Transaction().add(
-        createAccountInstruction
-      );
-      createAccountTransaction.feePayer = publicKey;
-      createAccountTransaction.recentBlockhash = (
-        await connection.getLatestBlockhash()
-      ).blockhash;
-
-      const signedCreateAccountTx = await signTransaction(
-        createAccountTransaction
-      );
-      const createAccountSignature = await connection.sendRawTransaction(
-        signedCreateAccountTx.serialize()
-      );
-      await connection.confirmTransaction(createAccountSignature, "confirmed");
-
-      addLog("代币账户创建成功!");
-
-      addLog("正在铸造代币...");
-      const mintToInstruction = token.createMintToInstruction(
-        mintAccount.publicKey,
-        associatedTokenAddress,
-        publicKey,
-        Number(tokenInfo.totalSupply) * 10 ** tokenInfo.decimals
+          publicKey,
+          associatedTokenAddress,
+          publicKey,
+          mintAccount.publicKey
+        )
       );
 
-      const mintToTransaction = new web3.Transaction().add(mintToInstruction);
-      mintToTransaction.feePayer = publicKey;
-      mintToTransaction.recentBlockhash = (
-        await connection.getLatestBlockhash()
-      ).blockhash;
-
-      const signedMintToTx = await signTransaction(mintToTransaction);
-      const mintToSignature = await connection.sendRawTransaction(
-        signedMintToTx.serialize()
+      // 3. 添加铸造代币的指令
+      transaction.add(
+        token.createMintToInstruction(
+          mintAccount.publicKey,
+          associatedTokenAddress,
+          publicKey,
+          Number(tokenInfo.totalSupply) * 10 ** tokenInfo.decimals
+        )
       );
-      await connection.confirmTransaction(mintToSignature);
 
-      addLog(`成功铸造 ${tokenInfo.totalSupply} 个代币!`);
-
+      // 4. 上传元数据到 IPFS
       addLog("正在上传元数据...");
-      // 上传图片和元数据到 IPFS（如果有图片）
       let imageUrl = "";
       if (tokenInfo.imageFile) {
         addLog("正在上传图片到 IPFS...");
@@ -179,25 +134,21 @@ function HomeComponent() {
           name: tokenInfo.name,
           symbol: tokenInfo.symbol,
           description: tokenInfo.description,
-          image: imageUrl || "", // 如果没有图片，使用空字符串
+          image: imageUrl || "",
           external_url: tokenInfo.externalUrl,
           attributes: [],
         })
       ).httpUrl;
       addLog("元数据上传成功!");
 
-      // 5. 创建元数据
+      // 5. 添加创建元数据账户的指令
       const metadataData = {
         name: tokenInfo.name,
         symbol: tokenInfo.symbol,
         uri: metadataUrl,
       };
-
-      // 6. 获取元数据 PDA
       const metadataPDA = findMetadataPda(mintAccount.publicKey);
-      // 7. 创建元数据指令并执行
-      addLog("正在创建代币元数据账户...");
-      const transaction = new web3.Transaction().add(
+      transaction.add(
         createMetadataInstruction(
           metadataPDA,
           mintAccount.publicKey,
@@ -207,18 +158,21 @@ function HomeComponent() {
           metadataData
         )
       );
+
+      // 设置交易参数并签名
       transaction.feePayer = publicKey;
       transaction.recentBlockhash = (
         await connection.getLatestBlockhash()
       ).blockhash;
+      transaction.sign(mintAccount);
 
-      const signedMetadataTx = await signTransaction(transaction);
+      const signedTx = await signTransaction(transaction);
+      addLog("正在发送交易...");
       const signature = await connection.sendRawTransaction(
-        signedMetadataTx.serialize()
+        signedTx.serialize()
       );
       await connection.confirmTransaction(signature, "confirmed");
 
-      addLog("代币元数据创建成功!");
       addLog("🎉 代币创建完成!");
     } catch (error: any) {
       if (error instanceof web3.SendTransactionError) {
