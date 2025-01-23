@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Header } from "@/components";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
@@ -8,6 +9,7 @@ function HomeComponent() {
   return (
     <div className="bg-gradient-to-br to-black min-h-screen from-purple-900 text-white">
       <div className="container flex flex-col mx-auto min-h-screen px-4">
+        <Header />
         {/* Hero Section */}
         <div className="flex flex-col flex-1 text-center mb-8 pt-28 items-center justify-center">
           <h1 className="bg-clip-text bg-gradient-to-r font-bold from-purple-400 to-pink-600 text-transparent mb-6 text-5xl">
@@ -50,7 +52,7 @@ function HomeComponent() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center pb-24">
+        <div className="text-center pb-16">
           <h2 className="font-bold mb-4 text-3xl">准备好创建你的代币了吗？</h2>
           <p className="mb-8 text-gray-300">
             加入 Solana 生态系统，开启你的区块链之旅
@@ -68,9 +70,12 @@ function HomeComponent() {
             >
               增发代币
             </Link>
-            <button className="border rounded-full font-bold border-purple-500 py-2 px-6 transition text-purple-400 duration-300 hover:bg-purple-500 hover:text-white">
-              了解更多
-            </button>
+            <Link
+              to="/disclaimer"
+              className="bg-warning rounded-full font-bold text-warning-content py-2 px-6 transition duration-300 hover:bg-warning/80"
+            >
+              免责声明
+            </Link>
           </div>
         </div>
 
