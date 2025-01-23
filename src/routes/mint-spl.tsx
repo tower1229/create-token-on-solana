@@ -67,6 +67,13 @@ function MintSplToken() {
 
       const mintPubkey = new web3.PublicKey(mintInfo.mintAddress);
 
+      // 检查 mint authority
+      const mintAccount = await token.getMint(connection, mintPubkey);
+      if (!mintAccount.mintAuthority?.equals(publicKey)) {
+        toast.error("您没有该代币的增发权限!");
+        return;
+      }
+
       // 获取接收代币的账户地址
       const associatedTokenAddress = token.getAssociatedTokenAddressSync(
         mintPubkey,
@@ -93,8 +100,12 @@ function MintSplToken() {
         );
       }
 
+      // 使用 BigInt 处理数值计算
+      const realAmount = BigInt(
+        Math.floor(amount * Math.pow(10, mintInfo.decimals))
+      );
+
       // 添加增发指令
-      const realAmount = amount * Math.pow(10, mintInfo.decimals);
       transaction.add(
         token.createMintToInstruction(
           mintPubkey,
@@ -125,6 +136,9 @@ function MintSplToken() {
       if (error instanceof web3.SendTransactionError) {
         console.error("交易错误详情:", error.logs);
         addLog(`❌ 错误: ${error.message}\n${error.logs?.join("\n")}`);
+      } else if (error.message?.includes("invalid mint authority")) {
+        console.error("权限错误:", error);
+        addLog("❌ 错误: 没有代币增发权限");
       } else if (error instanceof Error) {
         console.error("增发代币错误:", error);
         addLog(`❌ 错误: ${error.message}`);

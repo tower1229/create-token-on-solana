@@ -59,10 +59,10 @@ function HomeComponent() {
           </p>
           <div className="flex gap-4 justify-center">
             <Link
-              to="/create-spl"
+              to="/update-spl"
               className="rounded-full font-bold bg-purple-500 text-white py-2 px-6 transition duration-300 hover:bg-purple-600"
             >
-              创建代币
+              更新代币
             </Link>
             <Link
               to="/mint-spl"
