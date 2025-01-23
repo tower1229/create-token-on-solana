@@ -188,14 +188,9 @@ function createSplToken() {
       const signedTx = await signTransaction(transaction);
       addLog("正在发送交易...");
       const signature = await connection.sendRawTransaction(
-<<<<<<< HEAD
-        signedTx.serialize(),
-      )
-=======
         signedTx.serialize()
       );
       await connection.confirmTransaction(signature, "confirmed");
->>>>>>> 50970e239a31803d90fd884dc273a54157effcfc
 
       addLog("🎉 代币创建完成!");
       setSuccessInfo({
