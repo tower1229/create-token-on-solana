@@ -11,10 +11,31 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as UpdateSplImport } from './routes/update-spl'
+import { Route as MintSplImport } from './routes/mint-spl'
+import { Route as DisclaimerImport } from './routes/disclaimer'
 import { Route as CreateSplImport } from './routes/create-spl'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const UpdateSplRoute = UpdateSplImport.update({
+  id: '/update-spl',
+  path: '/update-spl',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MintSplRoute = MintSplImport.update({
+  id: '/mint-spl',
+  path: '/mint-spl',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DisclaimerRoute = DisclaimerImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const CreateSplRoute = CreateSplImport.update({
   id: '/create-spl',
@@ -46,6 +67,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateSplImport
       parentRoute: typeof rootRoute
     }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerImport
+      parentRoute: typeof rootRoute
+    }
+    '/mint-spl': {
+      id: '/mint-spl'
+      path: '/mint-spl'
+      fullPath: '/mint-spl'
+      preLoaderRoute: typeof MintSplImport
+      parentRoute: typeof rootRoute
+    }
+    '/update-spl': {
+      id: '/update-spl'
+      path: '/update-spl'
+      fullPath: '/update-spl'
+      preLoaderRoute: typeof UpdateSplImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +96,57 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/create-spl': typeof CreateSplRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/mint-spl': typeof MintSplRoute
+  '/update-spl': typeof UpdateSplRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-spl': typeof CreateSplRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/mint-spl': typeof MintSplRoute
+  '/update-spl': typeof UpdateSplRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/create-spl': typeof CreateSplRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/mint-spl': typeof MintSplRoute
+  '/update-spl': typeof UpdateSplRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/create-spl'
+  fullPaths: '/' | '/create-spl' | '/disclaimer' | '/mint-spl' | '/update-spl'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/create-spl'
-  id: '__root__' | '/' | '/create-spl'
+  to: '/' | '/create-spl' | '/disclaimer' | '/mint-spl' | '/update-spl'
+  id:
+    | '__root__'
+    | '/'
+    | '/create-spl'
+    | '/disclaimer'
+    | '/mint-spl'
+    | '/update-spl'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateSplRoute: typeof CreateSplRoute
+  DisclaimerRoute: typeof DisclaimerRoute
+  MintSplRoute: typeof MintSplRoute
+  UpdateSplRoute: typeof UpdateSplRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateSplRoute: CreateSplRoute,
+  DisclaimerRoute: DisclaimerRoute,
+  MintSplRoute: MintSplRoute,
+  UpdateSplRoute: UpdateSplRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +160,10 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/create-spl"
+        "/create-spl",
+        "/disclaimer",
+        "/mint-spl",
+        "/update-spl"
       ]
     },
     "/": {
@@ -105,6 +171,15 @@ export const routeTree = rootRoute
     },
     "/create-spl": {
       "filePath": "create-spl.tsx"
+    },
+    "/disclaimer": {
+      "filePath": "disclaimer.tsx"
+    },
+    "/mint-spl": {
+      "filePath": "mint-spl.tsx"
+    },
+    "/update-spl": {
+      "filePath": "update-spl.tsx"
     }
   }
 }
