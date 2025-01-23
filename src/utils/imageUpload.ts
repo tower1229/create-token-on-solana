@@ -1,9 +1,12 @@
-const IMGBB_API_KEY = import.meta.env.PROD
-  ? import.meta.env.IMGBB_API_KEY
-  : import.meta.env.PUBLIC_IMGBB_API_KEY;
+const IMGBB_API_KEY = process.env.PROD
+  ? process.env.IMGBB_API_KEY
+  : process.env.PUBLIC_IMGBB_API_KEY;
 
 export async function uploadImageToImgBB(file: File): Promise<string> {
   try {
+    if (!IMGBB_API_KEY) {
+      throw new Error("IMGBB API key is required");
+    }
     const formData = new FormData();
     formData.append("image", file);
     formData.append("key", IMGBB_API_KEY);
