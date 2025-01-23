@@ -24,6 +24,7 @@ function createSplToken() {
     imageFile: null as File | null,
     externalUrl: "",
     disableMinting: false,
+    isMutable: true,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
@@ -163,6 +164,7 @@ function createSplToken() {
         name: tokenInfo.name,
         symbol: tokenInfo.symbol,
         uri: metadataUrl,
+        isMutable: tokenInfo.isMutable,
       };
       const metadataPDA = findMetadataPda(mintAccount.publicKey);
       transaction.add(
@@ -340,7 +342,7 @@ function createSplToken() {
           </div>
 
           <div className="form-control">
-            <label className="label">
+            <label className="form-control">
               <span className="font-medium label-text">外部链接</span>
             </label>
             <input
@@ -372,6 +374,28 @@ function createSplToken() {
             <label className="label">
               <span className="text-base-content/70 label-text-alt">
                 启用后将永久禁用代币增发功能
+              </span>
+            </label>
+          </div>
+
+          <div className="form-control">
+            <label className="cursor-pointer label">
+              <span className="font-medium label-text">允许后续修改</span>
+              <input
+                type="checkbox"
+                checked={tokenInfo.isMutable}
+                onChange={(e) =>
+                  setTokenInfo({
+                    ...tokenInfo,
+                    isMutable: e.target.checked,
+                  })
+                }
+                className="checkbox"
+              />
+            </label>
+            <label className="label">
+              <span className="text-base-content/70 label-text-alt">
+                关闭后将无法再次修改代币元数据
               </span>
             </label>
           </div>
