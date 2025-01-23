@@ -11,7 +11,9 @@ interface TokenMetadata {
 
 export async function uploadImageToIPFS(
   file: File,
-  apiKey = import.meta.env.LIGHTHOUSE_API_KEY
+  apiKey = import.meta.env.PROD
+    ? import.meta.env.LIGHTHOUSE_API_KEY
+    : import.meta.env.PUBLIC_LIGHTHOUSE_API_KEY
 ): Promise<{ ipfsUrl: string; httpUrl: string }> {
   try {
     const response = await lighthouse.upload([file], apiKey);
@@ -32,7 +34,9 @@ export async function uploadImageToIPFS(
 
 export async function uploadMetadataToIPFS(
   metadata: TokenMetadata,
-  apiKey = import.meta.env.LIGHTHOUSE_API_KEY
+  apiKey = import.meta.env.PROD
+    ? import.meta.env.LIGHTHOUSE_API_KEY
+    : import.meta.env.PUBLIC_LIGHTHOUSE_API_KEY
 ): Promise<{ ipfsUrl: string; httpUrl: string }> {
   try {
     // 验证必要字段
