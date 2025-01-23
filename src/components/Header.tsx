@@ -25,7 +25,6 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
         })
         .catch((error) => toast.error(error));
     }
-
   }, [isSelect, connect]);
 
   const handleConnect = () => {
@@ -39,7 +38,7 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
     disconnect();
   };
 
-  const handleSwitchNetwork = (network: 'solana' | 'solana-devnet') => {
+  const handleSwitchNetwork = (network: "solana" | "solana-devnet") => {
     Network.setNetwork(network);
   };
 
@@ -66,16 +65,24 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
             >
               <li>
                 <a
-                  onClick={() => handleSwitchNetwork('solana')}
-                  className={Network.currentNetwork === 'solana' ? 'active' : ''}
+                  onClick={() => handleSwitchNetwork("solana")}
+                  className={
+                    Network.currentNetwork === "solana"
+                      ? "active"
+                      : "text-base-content"
+                  }
                 >
                   Mainnet
                 </a>
               </li>
               <li>
                 <a
-                  onClick={() => handleSwitchNetwork('solana-devnet')}
-                  className={Network.currentNetwork === 'solana-devnet' ? 'active' : ''}
+                  onClick={() => handleSwitchNetwork("solana-devnet")}
+                  className={
+                    Network.currentNetwork === "solana-devnet"
+                      ? "active"
+                      : "text-base-content"
+                  }
                 >
                   Devnet
                 </a>
@@ -92,16 +99,14 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
               tabIndex={0}
               className="rounded-lg bg-base-100 shadow p-2 w-44 z-[1] dropdown-content menu"
             >
-
               <li>
-                <a onClick={() => handleLogout()}>
-                  <Plugs size={24} weight="fill" className="text-primary" />{" "}
-                  Disconnect
+                <a onClick={() => handleLogout()} className="text-base-content">
+                  <Plugs size={24} weight="fill" /> Disconnect
                 </a>
               </li>
             </ul>
           </div>
-        </div >
+        </div>
       ) : (
         <button
           className="btn btn-outline btn-primary"
@@ -116,11 +121,8 @@ const ConnectSolanaButton = function ConnectSolanaButton() {
 
 export const Header = () => {
   return (
-    <div className="bg-gradient-to-r from-purple-900/90 to-black/90 backdrop-blur-lg flex h-20 shadow-lg px-6 top-0 right-0 left-0 z-50 gap-2 items-center fixed border-b border-purple-800/30">
-      <Link
-        to="/"
-        className=" text-5xl"
-      >
+    <div className="bg-gradient-to-r border-b flex from-purple-900/90 to-black/90 border-purple-800/30 h-20 shadow-lg px-6 top-0 right-0 left-0 z-50 gap-2 backdrop-blur-lg items-center fixed">
+      <Link to="/" className=" text-5xl">
         🧙🏼‍♂️
       </Link>
       <div className="flex-1"></div>

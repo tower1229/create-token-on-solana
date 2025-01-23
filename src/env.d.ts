@@ -4,7 +4,7 @@ interface ImportMetaEnv {
   // import.meta.env.PUBLIC_FOO
   readonly PUBLIC_BACKEND_SERVICE: string;
   readonly PUBLIC_SUPPORT_NETWORKS: string;
-  readonly PUBLIC_NFT_STORAGE_API_KEY: string;
+  readonly PUBLIC_LIGHTHOUSE_API_KEY: string;
   readonly PUBLIC_IMGBB_API_KEY: string;
 }
 

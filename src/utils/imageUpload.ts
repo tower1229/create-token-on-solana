@@ -1,4 +1,6 @@
-const IMGBB_API_KEY = import.meta.env.PUBLIC_IMGBB_API_KEY;
+const IMGBB_API_KEY = import.meta.env.PROD
+  ? import.meta.env.IMGBB_API_KEY
+  : import.meta.env.PUBLIC_IMGBB_API_KEY;
 
 export async function uploadImageToImgBB(file: File): Promise<string> {
   try {

@@ -82,16 +82,9 @@ function HomeComponent() {
         {/* Footer */}
         <footer className="border-t mt-auto border-purple-800/30 py-8">
           <div className="text-center text-gray-400">
-            <p>
-              Created by{" "}
-              <a
-                href="https://refined-x.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-colors text-purple-400 hover:text-purple-300"
-              >
-                refined-x
-              </a>
+            <p className="text-sm">
+              © {new Date().getFullYear()} Solana Token Creator. All rights
+              reserved.
             </p>
           </div>
         </footer>
