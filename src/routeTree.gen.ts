@@ -11,10 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as MintSplImport } from './routes/mint-spl'
 import { Route as CreateSplImport } from './routes/create-spl'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const MintSplRoute = MintSplImport.update({
+  id: '/mint-spl',
+  path: '/mint-spl',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const CreateSplRoute = CreateSplImport.update({
   id: '/create-spl',
@@ -46,6 +53,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CreateSplImport
       parentRoute: typeof rootRoute
     }
+    '/mint-spl': {
+      id: '/mint-spl'
+      path: '/mint-spl'
+      fullPath: '/mint-spl'
+      preLoaderRoute: typeof MintSplImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +68,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/create-spl': typeof CreateSplRoute
+  '/mint-spl': typeof MintSplRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-spl': typeof CreateSplRoute
+  '/mint-spl': typeof MintSplRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/create-spl': typeof CreateSplRoute
+  '/mint-spl': typeof MintSplRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/create-spl'
+  fullPaths: '/' | '/create-spl' | '/mint-spl'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/create-spl'
-  id: '__root__' | '/' | '/create-spl'
+  to: '/' | '/create-spl' | '/mint-spl'
+  id: '__root__' | '/' | '/create-spl' | '/mint-spl'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateSplRoute: typeof CreateSplRoute
+  MintSplRoute: typeof MintSplRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateSplRoute: CreateSplRoute,
+  MintSplRoute: MintSplRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +116,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/create-spl"
+        "/create-spl",
+        "/mint-spl"
       ]
     },
     "/": {
@@ -105,6 +125,9 @@ export const routeTree = rootRoute
     },
     "/create-spl": {
       "filePath": "create-spl.tsx"
+    },
+    "/mint-spl": {
+      "filePath": "mint-spl.tsx"
     }
   }
 }
