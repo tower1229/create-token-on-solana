@@ -178,7 +178,6 @@ function createSplToken() {
       const signature = await connection.sendRawTransaction(
         signedTx.serialize(),
       )
-      await connection.confirmTransaction(signature, 'confirmed')
 
       addLog('🎉 代币创建完成!')
       setSuccessInfo({
