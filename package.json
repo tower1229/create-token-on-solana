@@ -24,7 +24,7 @@
     "@solana/web3.js": "^1.95.8",
     "@tanstack/react-router": "^1.84.4",
     "@tanstack/router-devtools": "^1.84.4",
-    "axios": "^1.7.9",
+    "axios": "^1.13.5",
     "buffer": "^6.0.3",
     "mobx": "^6.13.5",
     "mobx-react-lite": "^4.0.7",
